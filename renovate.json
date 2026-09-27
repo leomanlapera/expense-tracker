@@ -1,0 +1,21 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits"],
+  "packageRules": [
+    {
+      "description": "Next.js ships monthly security releases — patch within 7 days.",
+      "matchPackageNames": ["next", "eslint-config-next"],
+      "labels": ["security", "next"],
+      "schedule": ["at any time"]
+    },
+    {
+      "description": "Group Supabase packages so they upgrade together.",
+      "matchPackageNames": ["@supabase/**"],
+      "groupName": "supabase"
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "schedule": ["at any time"]
+  }
+}
