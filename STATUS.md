@@ -31,7 +31,6 @@ Legend: ⚪ not started · 🟡 in progress · 🟢 done · 🔴 blocked
 ### Todo — Phase 4 close-out
 - [ ] Manual a11y check on a real device: keyboard traversal (Tab order, focus visible), VoiceOver/TalkBack sweep, 4.5:1 contrast spot-checks against WCAG AA.
 - [ ] Lighthouse mobile pass on the live URL — target ≥ 90 perf / 100 a11y.
-- [ ] Add repo secrets `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY` in GitHub → the CI `Integration tests` step needs them (skips silently if absent).
 - [ ] Full PWA offline queue (service worker + IndexedDB + background sync) — banner ships, sync deferred to a dedicated pass.
 
 ### Done (Phase 4 so far)
@@ -257,6 +256,7 @@ Append as decisions are made — one line each, dated.
 - 2026-09-27 — `"use server"` modules can only export async fns — moved shared constants/types into a companion module.
 - 2026-09-28 — CSP moved from static `next.config.ts` headers into `proxy.ts` so we can mint a per-request nonce; `script-src` locked to nonce + `strict-dynamic`; root layout became async to read `x-nonce`. Recharts keeps `'unsafe-inline'` on `style-src`.
 - 2026-09-28 — Optimistic UI for quick-add landed as a pub-sub ghost overlay in the dashboard Recent card rather than React's `useOptimistic` hook. Rationale: the form (in the modal) and the list (on the dashboard) render in different subtrees, so a dispatched optimistic state would revert as soon as its (empty) subscriber transition finished. Ghost state via `useState` + id-based dedupe on RSC refetch achieves the same visual behavior without misusing the hook.
+- 2026-09-28 — Dropped GitHub Actions CI (`.github/workflows/ci.yml`). Not needed for a personal project right now; `pnpm typecheck` / `pnpm test` still run locally. Reinstate when opening the project up.
 
 ---
 
