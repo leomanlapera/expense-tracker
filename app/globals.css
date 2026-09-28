@@ -1,36 +1,124 @@
 @import "tailwindcss";
 
+/* Palette derived from https://colorhunt.co/palette/0107360d1c4222396ffcf1d0
+ *   #010736  ink
+ *   #0D1C42  ink-2
+ *   #22396F  ink-3
+ *   #FCF1D0  cream
+ *
+ * Light: white bg + navy ink foreground. Dark: navy bg + cream foreground.
+ */
 @theme {
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-sans: var(--font-sans-family), system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-background: #ffffff;
-  --color-foreground: #171717;
-  --color-muted: #f4f4f5;
-  --color-muted-foreground: #71717a;
-  --color-border: #e4e4e7;
-  --color-accent: #18181b;
-  --color-accent-foreground: #fafafa;
+  --color-surface: #ffffff;
+  --color-muted: #f6f7fb;
+  --color-muted-foreground: #22396f;
+  --color-border: #e3e7f2;
+  --color-foreground: #0d1c42;
+  --color-accent: #010736;
+  --color-accent-foreground: #ffffff;
+  --color-highlight: #fcf1d0;
 
   --color-budget-ok: #16a34a;
   --color-budget-warn: #d97706;
   --color-budget-over: #dc2626;
 }
 
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-    --color-muted: #18181b;
-    --color-muted-foreground: #a1a1aa;
-    --color-border: #27272a;
-    --color-accent: #fafafa;
-    --color-accent-foreground: #18181b;
-  }
+/* Dark variant. Only tokens flip — every component references them, so
+ * nothing else needs a `dark:` variant to work. */
+[data-theme="dark"] {
+  --color-background: #010736;
+  --color-surface: #0d1c42;
+  --color-muted: #0d1c42;
+  --color-muted-foreground: #a4b0d8;
+  --color-border: #22396f;
+  --color-foreground: #fcf1d0;
+  --color-accent: #fcf1d0;
+  --color-accent-foreground: #010736;
+  --color-highlight: #22396f;
+
+  --color-budget-ok: #4ade80;
+  --color-budget-warn: #fbbf24;
+  --color-budget-over: #f87171;
+
+  color-scheme: dark;
 }
 
+html,
 body {
   background: var(--color-background);
   color: var(--color-foreground);
+  color-scheme: light;
   font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.01em;
+}
+
+/* Modal / dialog enter animation */
+@keyframes app-scale-in {
+  from { opacity: 0; transform: scale(0.97) translateY(4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes app-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.app-fade-in { animation: app-fade-in 0.15s ease-out; }
+.app-scale-in { animation: app-scale-in 0.18s cubic-bezier(0.16, 1, 0.3, 1); }
+
+::selection {
+  background: var(--color-highlight);
+  color: var(--color-accent);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* App-wide checkbox styling. Native for accessibility + form semantics,
+ * but themed. Uses inline SVG for the check so it flips with the accent. */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+  vertical-align: middle;
+}
+
+input[type="checkbox"]:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+input[type="checkbox"]:checked {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-size: 0.75rem 0.75rem;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* In dark mode the accent is cream, so the checkmark needs to be dark. */
+[data-theme="dark"] input[type="checkbox"]:checked {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23010736' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+}
+
+input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }

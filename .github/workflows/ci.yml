@@ -28,6 +28,15 @@ jobs:
 
       - run: pnpm build
         env:
-          # Build must succeed without real Supabase keys — proxy short-circuits
-          # when they are absent. Real keys live in Vercel env, not CI.
           NEXT_TELEMETRY_DISABLED: "1"
+
+      # RLS integration test hits a real Supabase project. Configure these repo
+      # secrets (Settings → Secrets and variables → Actions):
+      #   SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, SUPABASE_SECRET_KEY
+      # If any are missing, the suite skips itself (see tests/rls.test.ts).
+      - name: Integration tests
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+        run: pnpm test
