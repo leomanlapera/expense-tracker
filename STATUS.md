@@ -27,6 +27,8 @@ Legend: ⚪ not started · 🟡 in progress · 🟢 done · 🔴 blocked
 - [ ] Test PWA "Add to Home Screen" on a real iPhone (Safari) and Android Chrome.
 - [ ] Push to GitHub + connect Vercel; set env vars in Vercel (URL / publishable / secret).
 - [ ] Enable Supabase MFA (TOTP) for your own account before beta.
+- [ ] Supabase → Authentication → Sign In / Providers → **turn off "Allow new users to sign up"** (hosted project still accepts public sign-ups as of 2026-10-12).
+- [ ] Create your account: `pnpm invite --email=<you>` (database was wiped 2026-10-12).
 
 ### Todo — Phase 4 close-out
 - [ ] Manual a11y check on a real device: keyboard traversal (Tab order, focus visible), VoiceOver/TalkBack sweep, 4.5:1 contrast spot-checks against WCAG AA.
@@ -256,6 +258,7 @@ Append as decisions are made — one line each, dated.
 - 2026-09-27 — `"use server"` modules can only export async fns — moved shared constants/types into a companion module.
 - 2026-09-28 — CSP moved from static `next.config.ts` headers into `proxy.ts` so we can mint a per-request nonce; `script-src` locked to nonce + `strict-dynamic`; root layout became async to read `x-nonce`. Recharts keeps `'unsafe-inline'` on `style-src`.
 - 2026-09-28 — Optimistic UI for quick-add landed as a pub-sub ghost overlay in the dashboard Recent card rather than React's `useOptimistic` hook. Rationale: the form (in the modal) and the list (on the dashboard) render in different subtrees, so a dispatched optimistic state would revert as soon as its (empty) subscriber transition finished. Ghost state via `useState` + id-based dedupe on RSC refetch achieves the same visual behavior without misusing the hook.
+- 2026-10-12 — Auth switched from magic link to email + password (`signInWithPassword` via Server Action). Magic links kept hitting the free-tier email rate limit. Accounts are created with `pnpm invite` (admin `createUser` with `email_confirm: true`, so no email goes out); `/auth/callback` removed; users change passwords under Settings → Password. Supersedes the 2026-09-27 invite-only entry.
 - 2026-09-28 — Dropped GitHub Actions CI (`.github/workflows/ci.yml`). Not needed for a personal project right now; `pnpm typecheck` / `pnpm test` still run locally. Reinstate when opening the project up.
 
 ---

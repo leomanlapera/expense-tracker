@@ -3,6 +3,7 @@ import type { Profile } from "@/lib/db-types";
 import { DeleteAccountForm } from "./delete-account-form";
 import { ExportForm } from "./export-form";
 import { ImportForm } from "./import-form";
+import { PasswordForm } from "./password-form";
 import { ProfileForm } from "./profile-form";
 import { Card, CardHeader } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -41,6 +42,11 @@ export default async function SettingsPage() {
           displayName={profile?.display_name ?? null}
           timezone={profile?.timezone ?? "Asia/Manila"}
         />
+      </Card>
+
+      <Card as="section">
+        <CardHeader title="Password" subtitle="Change the password you sign in with." />
+        <PasswordForm />
       </Card>
 
       <section className="grid gap-6 lg:grid-cols-2">

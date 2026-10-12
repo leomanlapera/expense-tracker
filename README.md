@@ -53,9 +53,17 @@ Open the Supabase SQL Editor and run each file in [`supabase/migrations/`](./sup
 
 In Supabase → Auth:
 
-- Add `http://localhost:3000/auth/callback` (and later your prod URL) to **Redirect URLs**.
-- **Turn off** "Allow new users to sign up" — the app is invite-only.
-- Invite yourself via **Authentication → Users → Invite user**.
+- **Turn off** "Allow new users to sign up" (Sign In / Providers) — the app is invite-only.
+- Keep the **Email** provider enabled (it covers password sign-in).
+- Create accounts with the invite script — it sets a password directly, so no email is sent and the free-tier email limit never applies:
+
+```bash
+pnpm invite --email=you@example.com                  # prints a generated password
+pnpm invite --email=you@example.com --password=...   # or pick one
+pnpm invite --email=you@example.com --reset          # new password for an existing user
+```
+
+Users can change their password under **Settings → Password**.
 
 ### 5. Run
 
@@ -63,7 +71,7 @@ In Supabase → Auth:
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and sign in with the magic link.
+Open [http://localhost:3000](http://localhost:3000) and sign in with your email and password.
 
 ### 6. (Optional) Seed sample data
 
@@ -85,6 +93,7 @@ Inserts ~90 realistic PH-style transactions across the last 90 days, four curren
 | `pnpm typecheck` | `tsc --noEmit`. |
 | `pnpm test` | Vitest. Cross-user RLS test skips gracefully without Supabase secrets. |
 | `pnpm seed` | Seed the current user with fixture data. |
+| `pnpm invite` | Create an account (or `--reset` its password) without sending email. |
 
 ## Project layout
 
@@ -100,7 +109,6 @@ app/
     _components/            sidebar, FAB, modal, toaster, offline banner
     _actions/               shared server actions
   api/                      REST endpoints (CSV export/import, receipts)
-  auth/                     magic-link callback
   sign-in/                  public sign-in page
 components/ui/              hand-rolled primitives (Card, Button, Field, Select…)
 lib/
@@ -111,6 +119,7 @@ lib/
   toast.ts tx-bus.ts        client pub-subs
 supabase/migrations/        SQL, apply in the SQL Editor
 scripts/seed.ts             fixture generator
+scripts/invite.ts           invite-only account creation / password reset
 tests/                      Vitest suites
 ```
 

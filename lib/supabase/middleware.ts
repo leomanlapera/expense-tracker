@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/sign-in", "/auth/callback"];
+const PUBLIC_PATHS = ["/sign-in"];
 
 type Security = { nonce: string; csp: string };
 
@@ -65,7 +65,7 @@ export async function updateSession(request: NextRequest, security: Security) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/sign-in";
     redirectUrl.search = "";
-    // Round-trip the intended path so the callback can send them back after login.
+    // Round-trip the intended path so sign-in can send them back afterwards.
     const intended = pathname + request.nextUrl.search;
     if (intended && intended !== "/") redirectUrl.searchParams.set("next", intended);
     return withCsp(NextResponse.redirect(redirectUrl), security.csp);

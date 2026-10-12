@@ -13,7 +13,7 @@ export default async function SignInPage({
       <header className="flex flex-col gap-2 text-center">
         <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
         <p className="text-sm text-[color:var(--color-muted-foreground)]">
-          Invite-only for now. Enter your email — you&rsquo;ll get a link if you&rsquo;ve been invited.
+          Invite-only. Use the email and password you were given.
         </p>
       </header>
 

@@ -65,3 +65,25 @@ export async function deleteAccount(_prev: { error?: string }, fd: FormData): Pr
   await supabase.auth.signOut();
   redirect("/sign-in?deleted=1");
 }
+
+export type PasswordActionState = { ok?: boolean; error?: string };
+
+export async function changePassword(
+  _prev: PasswordActionState,
+  fd: FormData,
+): Promise<PasswordActionState> {
+  const password = String(fd.get("password") ?? "");
+  const confirm = String(fd.get("confirm") ?? "");
+  if (password.length < 8) return { error: "Use at least 8 characters." };
+  if (password !== confirm) return { error: "Passwords don’t match." };
+
+  const supabase = await getSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/sign-in");
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: error.message };
+  return { ok: true };
+}
